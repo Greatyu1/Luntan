@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+    <mapper namespace="com.greatyu.invitation.mapper.InvitaMapper">
+
+    <select id="getInvitaList" resultType="com.greatyu.invitation.model.Invita" parameterType="com.greatyu.invitation.model.Invita">
+select
+ userCode,
+invite_id inviteId,
+invite_title inviteTitle,
+invite_content inviteContent,
+type,
+bytime,
+isDelete,
+updatetime,
+invite_code inviteCode
+from invitation where isDelete=1
+
+<if test="invita.inviteCode !=null and invita.inviteCode != ''">
+    and invite_code = #{invita.inviteCode}
+</if>
+        <if test="invita.type !=null and invita.type != ''">
+            and type = #{invita.type}
+        </if>
+
+        <if test="invita.inviteTitle !=null and invita.inviteTitle != ''">
+            and invite_title  like concat('%',#{invita.inviteTitle},'%')
+        </if>
+    </select>
+    
+    <select id="getImgUrl" resultType="string">
+        select user_url from user where isDelete=1 and userCode=#{userCode};
+    </select>
+
+    <select id="getNum" resultType="string">
+        select count(*) from census  where invite_code=#{inviteCode} and level= 1
+    </select>
+
+    <select id="getPingLun" resultType="string">
+        select count(*) from comment  where invite_code=#{inviteCode}
+    </select>
+
+    <insert id="addInvite" parameterType="com.greatyu.invitation.model.Invita">
+        INSERT INTO invitation (userCode, invite_title, invite_content, type, bytime, isDelete, invite_code) VALUES (#{invita.userCode},#{invita.inviteTitle},
+        #{invita.inviteContent}, #{invita.type}, now(), 1, #{invita.inviteCode})
+    </insert>
+
+    <select id="getSee" parameterType="com.greatyu.invitation.model.PingLun" resultType="com.greatyu.invitation.model.PingLun">
+        select
+invite_code inviteCode,
+comment_id commentId,
+reply_id replyId,
+comment_text commentText,
+bytime ,
+isDelete,
+updatetime,
+comment_code commentCode
+from comment where invite_code=#{pingLun.inviteCode} and isDelete=1
+    </select>
+
+
+    <select id="getSees" parameterType="string" resultType="com.greatyu.invitation.model.PingLun">
+        select
+        invite_code inviteCode,
+        comment_id commentId,
+        reply_id replyId,
+        comment_text commentText,
+        bytime ,
+        isDelete,
+        updatetime,
+        comment_code commentCode
+        from comment where invite_code=#{inviteCode}
+        and comment_code=#{commentCode}
+
+
+    </select>
+
+    <insert id="writePinglun" parameterType="com.greatyu.invitation.model.PingLun">
+    INSERT INTO  comment (invite_code, comment_id, reply_id, comment_text, bytime, isDelete, comment_code) VALUES (#{pingLun.inviteCode}, #{pingLun.commentId}, #{pingLun.replyId}, #{pingLun.commentText}, now(), 1, #{pingLun.commentCode})
+    </insert>
+
+    <update id="updateInvite" parameterType="com.greatyu.invitation.model.Invita">
+            update invitation set invite_title=#{invita.inviteTitle}, invite_content=#{invita.inviteContent}, type=#{invita.type} where invite_code=#{invita.inviteCode}
+    </update>
+
+    <update id="deleteInvite" parameterType="string">
+        update invitation set isDelete=0 where invite_code=#{invitCode}
+    </update>
+
+    <select id="getUser" resultType="com.greatyu.users.model.User" parameterType="string">
+        select
+        userCode,
+        userName,
+        userPwd,
+        userSex,
+        email,
+        phone,
+        bytime,
+        score,
+        isDelete,
+        geyan,
+        updatetime,
+        qq,
+        user_url userUrl,
+        admin
+        from user where isDelete=1
+            and userCode =#{commentId}
+    </select>
+
+    <select id="getCensus" parameterType="com.greatyu.invitation.model.Census" resultType="com.greatyu.invitation.model.Census">
+        select * from census where invite_code=#{census.invite_code} and userId=#{census.userId}
+        and level =#{census.level}
+
+    </select>
+
+    <insert id="addCensus" parameterType="com.greatyu.invitation.model.Census">
+        insert census (
+invite_code,
+userId,
+level
+        )
+        values
+        (
+        #{census.invite_code},
+        #{census.userId},
+        #{census.level}
+        )
+    </insert>
+    </mapper>

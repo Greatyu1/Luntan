@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+    <mapper namespace="com.greatyu.users.mapper.UserMapper">
+
+    <select id="listUser" resultType="com.greatyu.users.model.User" parameterType="com.greatyu.users.model.User">
+      select
+      userCode,
+userName,
+userPwd,
+userSex,
+email,
+phone,
+bytime,
+score,
+isDelete,
+geyan,
+updatetime,
+qq,
+user_url userUrl,
+admin
+from user where isDelete=1
+        <if test="user.userCode !=null and user.userCode!=''">
+            and userCode =#{user.userCode}
+        </if>
+    </select>
+
+    <select id="login" resultType="com.greatyu.users.model.User" parameterType="string">
+        select
+        userCode,
+        userName,
+        userPwd,
+        userSex,
+        email,
+        phone,
+        bytime,
+        score,
+        isDelete,
+        geyan,
+        updatetime,
+        qq,
+        user_url userUrl,
+        admin
+        from user where isDelete=1 and userName=#{username} and userPwd=#{password}
+    </select>
+    </mapper>

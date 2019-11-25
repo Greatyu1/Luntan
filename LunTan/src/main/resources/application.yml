@@ -1,0 +1,23 @@
+mybatis:
+  config-location: classpath:mybatis/mybatis.cfg.xml
+  mapper-locations:  classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.greatyu/*/model
+server:
+  port: 9999
+spring:
+  application:
+    name: sm
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/luntan? characterEncoding=utf8&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useL egacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: 123456
+  logging:
+    level:
+      com.greatyu.*: debug
+      com.greatyu.*.mapper: debug
+  pagehelper:
+    helper-dialect: mysql
+    reasonable: true
+    support-methods-arguments: true
+    params: count=countSql
